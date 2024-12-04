@@ -6,6 +6,8 @@ class Red_box_Mechanics:
         self.rectangle = pygame.Rect(x, y, width, height)
         self.color = color
         self.active = True # Makes red box active
+        self.click_time = 0 # Time when clicked
+        self.reset_time = 500 # Time until reset
 
     def draw(self, surface):
         if self.active:
@@ -15,8 +17,13 @@ class Red_box_Mechanics:
         if self.active and self.rectangle.collidepoint(mouse_pos):
             print("The Red box is clicked")
             self.active = False # once clicked, set to inactive
+            self.click_time = pygame.time.get_ticks()
             return True
         return False
+
+    def update(self):
+        if not self.active and (pygame.time.get_ticks() - self.click_time) > self.reset_time:
+            self.active = True # Make sure to reactivate the box
 
 def main():
     pygame.init()
@@ -42,8 +49,8 @@ def main():
     border_rectangle = pygame.Rect(50, 70, 800, 600) # should posit 40 by 70px and the rect by 800 by 600px
 
     # red box
-    red_box_color = 'Red'
-    red_box_size = (50, 60)
+    red_box_color = 'Black'
+    red_box_size = (30, 40)
     red_box_x = (900 - red_box_size[0]) // 2
     red_box_y = (700 - red_box_size[1]) // 2
     red_box = Red_box_Mechanics(red_box_x, red_box_y, * red_box_size, red_box_color)
@@ -65,7 +72,8 @@ def main():
                     if red_box.check_click(mouse_pos):
                         score_count += 1
                         score_text = score_font.render(f"Score: {score_count}", True, ('White'))
-                        
+
+        red_box.update()      
 
         screen.fill('Black')
 
