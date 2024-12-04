@@ -1,25 +1,34 @@
 import pygame
 import os
+import random
 
 class Red_box_Mechanics:
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height, color, screen_width, screen_height):
         self.rectangle = pygame.Rect(x, y, width, height)
         self.color = color
         self.active = True # Makes red box active
         self.click_time = 0 # Time when clicked
         self.reset_time = 500 # Time until reset
+        self.screen_width = screen_width
+        self.screen_height = screen_height
 
     def draw(self, surface):
         if self.active:
             pygame.draw.rect(surface, self.color, self.rectangle)
+
+    def teleport(self):
+        update_x = random.randint(50, self.screen_width - self.rectangle.width - 50)
+        update_y = random.randint(50, self.screen_height - self.rectangle.height - 50)
+        self.rectangle.topleft = (update_x, update_y)
 
     def check_click(self, mouse_pos):
         if self.active and self.rectangle.collidepoint(mouse_pos):
             print("The Red box is clicked")
             self.active = False # once clicked, set to inactive
             self.click_time = pygame.time.get_ticks()
+            self.teleport() #Should teleport to new location after click
             return True
-        return False
+        return False  
 
     def update(self):
         if not self.active and (pygame.time.get_ticks() - self.click_time) > self.reset_time:
@@ -28,7 +37,9 @@ class Red_box_Mechanics:
 def main():
     pygame.init()
 
-    screen = pygame.display.set_mode((900, 700))
+    screen_width = 900
+    screen_height = 700
+    screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Bug Swatter")
 
     # Title
@@ -53,7 +64,7 @@ def main():
     red_box_size = (30, 40)
     red_box_x = (900 - red_box_size[0]) // 2
     red_box_y = (700 - red_box_size[1]) // 2
-    red_box = Red_box_Mechanics(red_box_x, red_box_y, * red_box_size, red_box_color)
+    red_box = Red_box_Mechanics(red_box_x, red_box_y, * red_box_size, red_box_color, screen_width, screen_height)
 
     # Pull Image
     image_path = os.path.join('..', 'docs', 'Bug.png')
