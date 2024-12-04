@@ -36,11 +36,29 @@ class AnimationMechanics:
         self.height = height
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.fly_timer = 0
+        self.fly_interval = 200
 
     def teleport(self):
         update_x = random.randint(50, self.screen_width - self.width - 50)
         update_y = random.randint(50, self.screen_height - self.height - 50)
         self.red_box.rectangle.topleft = (update_x, update_y)
+
+    def fly(self):
+        offset = 25 # the range within the red box
+
+        if self.red_box.active:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.fly_timer > self.fly_interval:
+                fly_within_x = random.randint(-offset, offset)
+                fly_within_y = random.randint(-offset, offset)
+                self.red_box.rectangle.x += fly_within_x
+                self.red_box.rectangle.y += fly_within_y
+                self.fly_timer = current_time #reset the timer after the operaion completes. 
+                self.red_box.rectangle.x = max(60, min(self.red_box.rectangle.x, self.red_box.screen_width - self.red_box.rectangle.width - 50))
+                self.red_box.rectangle.y = max(80, min(self.red_box.rectangle.y, self.red_box.screen_height - self.red_box.rectangle.height - 50))
+
+
 
 def main():
     pygame.init()
@@ -96,7 +114,8 @@ def main():
                         score_text = score_font.render(f"Score: {score_count}", True, ('White'))
                         animation_mechanics.teleport()
 
-        red_box.update()      
+        red_box.update()
+        animation_mechanics.fly()
 
         screen.fill('Black')
 
