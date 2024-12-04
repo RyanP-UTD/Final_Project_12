@@ -1,6 +1,18 @@
 import pygame
 import os
 
+class Red_box_Mechanics:
+    def __init__(self, x, y, width, height, color):
+        self.rectangle = pygame.Rect(x, y, width, height)
+        self.color = color
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, self.color, self.rectangle)
+
+    def check_click(self, mouse_pos):
+        if self.rectangle.collidepoint(mouse_pos):
+            print("The Red box is clicked")
+
 def main():
     pygame.init()
 
@@ -23,7 +35,7 @@ def main():
     red_box_size = (50, 60)
     red_box_x = (900 - red_box_size[0]) // 2
     red_box_y = (700 - red_box_size[0]) // 2
-    red_box = pygame.Rect(red_box_x, red_box_y, * red_box_size)
+    red_box = Red_box_Mechanics(red_box_x, red_box_y, * red_box_size, red_box_color)
 
     # Pull Image
     image_path = os.path.join('..', 'docs', 'Bug.png')
@@ -36,6 +48,10 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1: # Left mouse button
+                    mouse_pos = event.pos
+                    red_box.check_click(mouse_pos)
 
         screen.fill('Black')
 
@@ -43,9 +59,9 @@ def main():
 
         screen.blit(title_text, title_rectangle)
 
-        pygame.draw.rect(screen, red_box_color, red_box)
+        red_box.draw(screen)
 
-        screen.blit(image, red_box.topleft)
+        screen.blit(image, red_box.rectangle.topleft)
 
         pygame.display.flip()
 
@@ -53,3 +69,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+ 
