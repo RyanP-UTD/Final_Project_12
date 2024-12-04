@@ -16,23 +16,31 @@ class Red_box_Mechanics:
         if self.active:
             pygame.draw.rect(surface, self.color, self.rectangle)
 
-    def teleport(self):
-        update_x = random.randint(50, self.screen_width - self.rectangle.width - 50)
-        update_y = random.randint(50, self.screen_height - self.rectangle.height - 50)
-        self.rectangle.topleft = (update_x, update_y)
 
     def check_click(self, mouse_pos):
         if self.active and self.rectangle.collidepoint(mouse_pos):
             print("The Red box is clicked")
             self.active = False # once clicked, set to inactive
             self.click_time = pygame.time.get_ticks()
-            self.teleport() #Should teleport to new location after click
             return True
         return False  
 
     def update(self):
         if not self.active and (pygame.time.get_ticks() - self.click_time) > self.reset_time:
             self.active = True # Make sure to reactivate the box
+
+class AnimationMechanics:
+    def __init__(self, red_box, width, height, screen_width, screen_height):
+        self.red_box = red_box
+        self.width = width
+        self.height = height
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
+    def teleport(self):
+        update_x = random.randint(50, self.screen_width - self.width - 50)
+        update_y = random.randint(50, self.screen_height - self.height - 50)
+        self.red_box.rectangle.topleft = (update_x, update_y)
 
 def main():
     pygame.init()
@@ -66,6 +74,9 @@ def main():
     red_box_y = (700 - red_box_size[1]) // 2
     red_box = Red_box_Mechanics(red_box_x, red_box_y, * red_box_size, red_box_color, screen_width, screen_height)
 
+    # New class function: Animation Mechanics
+    animation_mechanics = AnimationMechanics(red_box, red_box.rectangle.width, red_box.rectangle.height, screen_width, screen_height)
+
     # Pull Image
     image_path = os.path.join('..', 'docs', 'Bug.png')
     image = pygame.image.load(image_path) #Should load an image
@@ -83,6 +94,7 @@ def main():
                     if red_box.check_click(mouse_pos):
                         score_count += 1
                         score_text = score_font.render(f"Score: {score_count}", True, ('White'))
+                        animation_mechanics.teleport()
 
         red_box.update()      
 
