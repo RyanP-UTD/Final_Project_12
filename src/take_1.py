@@ -11,10 +11,13 @@ class Red_box_Mechanics:
         self.reset_time = 500
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.surface = pygame.Surface((width, height))
+        self.surface.set_alpha(0)
+        pygame.draw.rect(self.surface, color, (0, 0, width, height))
 
     def draw(self, surface):
         if self.active:
-            pygame.draw.rect(surface, self.color, self.rectangle)
+            surface.blit(self.surface, self.rectangle)
 
 
     def check_click(self, mouse_pos):
@@ -76,21 +79,21 @@ def main():
 
     # Score Indicator
     score_count = 0
-    score_font = pygame.font.Font(None, 36)
+    score_font = pygame.font.Font(None, 30)
     score_text = score_font.render(f"Score: {score_count}", True, ('White'))
-    score_rectangle = score_text.get_rect(center=(750, 95))
+    score_rectangle = score_text.get_rect(center= (761, 118))
 
     # Level Indicator
     level_count = 0
     level_font = pygame.font.Font(None, 30)
     level_text = level_font.render(f"Level: {level_count}", True, ("white"))
-    level_rectangle = level_text.get_rect(topleft = (718, 115))
+    level_rectangle = level_text.get_rect(topleft = (722, 130))
 
-    # Number of Trys counter
-    Trys_counts = 0
-    Trys_font = pygame.font.Font(None, 27)
-    Trys_text = Trys_font.render(f"Trys: {Trys_counts}", True, ('White'))
-    Trys_rectangle = Trys_text.get_rect(topleft = (734, 139))
+    # Number of clicks counter
+    Clicks_counts = 0
+    Clicks_font = pygame.font.Font(None, 36)
+    Clicks_text = Clicks_font.render(f"Clicks: {Clicks_counts}", True, ('White'))
+    Clicks_rectangle = Clicks_text.get_rect(topleft = (720, 81))
 
     # border line
     border_color = 'White'
@@ -120,8 +123,8 @@ def main():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    Trys_counts += 1
-                    Trys_text = Trys_font.render(f"Trys: {Trys_counts}", True, ('White'))
+                    Clicks_counts += 1
+                    Clicks_text = Clicks_font.render(f"Clicks: {Clicks_counts}", True, ('White'))
 
                     mouse_pos = event.pos
                     if red_box.check_click(mouse_pos):
@@ -152,7 +155,7 @@ def main():
 
         screen.blit(score_text, score_rectangle)
         screen.blit(level_text, level_rectangle)
-        screen.blit(Trys_text, Trys_rectangle)
+        screen.blit(Clicks_text, Clicks_rectangle)
 
         pygame.display.flip()
 
