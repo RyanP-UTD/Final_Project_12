@@ -75,7 +75,7 @@ def main():
     pygame.font.init()
     font = pygame.font.SysFont('Stencil', 48)
     title_text = font.render("Bug Swatter", True, ('White'))
-    title_rectangle = title_text.get_rect(center = (4, 40))
+    title_rectangle = title_text.get_rect(center = (450, 40))
 
     # Score Indicator
     score_count = 0
