@@ -70,7 +70,7 @@ def main():
 
     # Title
     pygame.font.init()
-    font = pygame.font.Font(None, 48)
+    font = pygame.font.SysFont('Stencil', 48)
     title_text = font.render("Bug Swatter", True, ('White'))
     title_rectangle = title_text.get_rect(center = (450, 40))
 
@@ -82,10 +82,15 @@ def main():
 
     # Level Indicator
     level_count = 0
-    level_font = pygame.font.Font(None, 36)
+    level_font = pygame.font.Font(None, 30)
     level_text = level_font.render(f"Level: {level_count}", True, ("white"))
-    level_rectangle = level_text.get_rect(topleft = (710, 125))
+    level_rectangle = level_text.get_rect(topleft = (718, 115))
 
+    # Number of Trys counter
+    Trys_counts = 0
+    Trys_font = pygame.font.Font(None, 27)
+    Trys_text = Trys_font.render(f"Trys: {Trys_counts}", True, ('White'))
+    Trys_rectangle = Trys_text.get_rect(topleft = (734, 139))
 
     # border line
     border_color = 'White'
@@ -115,6 +120,9 @@ def main():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
+                    Trys_counts += 1
+                    Trys_text = Trys_font.render(f"Trys: {Trys_counts}", True, ('White'))
+
                     mouse_pos = event.pos
                     if red_box.check_click(mouse_pos):
                         score_count += 1
@@ -144,6 +152,7 @@ def main():
 
         screen.blit(score_text, score_rectangle)
         screen.blit(level_text, level_rectangle)
+        screen.blit(Trys_text, Trys_rectangle)
 
         pygame.display.flip()
 
