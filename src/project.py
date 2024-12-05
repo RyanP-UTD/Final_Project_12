@@ -75,25 +75,25 @@ def main():
     pygame.font.init()
     font = pygame.font.SysFont('Stencil', 48)
     title_text = font.render("Bug Swatter", True, ('White'))
-    title_rectangle = title_text.get_rect(center = (450, 40))
+    title_rectangle = title_text.get_rect(center = (4, 40))
 
     # Score Indicator
     score_count = 0
     score_font = pygame.font.Font(None, 30)
     score_text = score_font.render(f"Score: {score_count}", True, ('White'))
-    score_rectangle = score_text.get_rect(center= (761, 118))
+    score_rectangle = score_text.get_rect(center= (751, 118))
 
     # Level Indicator
     level_count = 0
     level_font = pygame.font.Font(None, 30)
     level_text = level_font.render(f"Level: {level_count}", True, ("white"))
-    level_rectangle = level_text.get_rect(topleft = (722, 130))
+    level_rectangle = level_text.get_rect(topleft = (712, 130))
 
     # Number of clicks counter
     Clicks_counts = 0
     Clicks_font = pygame.font.Font(None, 36)
     Clicks_text = Clicks_font.render(f"Clicks: {Clicks_counts}", True, ('White'))
-    Clicks_rectangle = Clicks_text.get_rect(topleft = (720, 81))
+    Clicks_rectangle = Clicks_text.get_rect(topleft = (710, 81))
 
     # border line
     border_color = 'White'
