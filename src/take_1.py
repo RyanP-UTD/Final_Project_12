@@ -37,7 +37,8 @@ class AnimationMechanics:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.fly_timer = 0
-        self.fly_interval = 200
+        self.fly_interval = 500
+        self.angle = 0
 
     def teleport(self):
         update_x = random.randint(50, self.screen_width - self.width - 50)
@@ -57,6 +58,7 @@ class AnimationMechanics:
                 self.fly_timer = current_time #reset the timer after the operaion completes. 
                 self.red_box.rectangle.x = max(60, min(self.red_box.rectangle.x, self.red_box.screen_width - self.red_box.rectangle.width - 50))
                 self.red_box.rectangle.y = max(80, min(self.red_box.rectangle.y, self.red_box.screen_height - self.red_box.rectangle.height - 50))
+                self.angle = (self.angle + 10) % 360
 
 
 
@@ -126,7 +128,9 @@ def main():
         red_box.draw(screen)
 
         if red_box.active:
-            screen.blit(image, red_box.rectangle.topleft)
+            rotated_image = pygame.transform.rotate(image, animation_mechanics.angle)
+            rectangular = rotated_image.get_rect(center = red_box.rectangle.center)
+            screen.blit(rotated_image, rectangular)
 
         #screen.blit(image, red_box.rectangle.topleft)
 
