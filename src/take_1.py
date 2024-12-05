@@ -6,9 +6,9 @@ class Red_box_Mechanics:
     def __init__(self, x, y, width, height, color, screen_width, screen_height):
         self.rectangle = pygame.Rect(x, y, width, height)
         self.color = color
-        self.active = True # Makes red box active
-        self.click_time = 0 # Time when clicked
-        self.reset_time = 500 # Time until reset
+        self.active = True
+        self.click_time = 0
+        self.reset_time = 500
         self.screen_width = screen_width
         self.screen_height = screen_height
 
@@ -20,14 +20,14 @@ class Red_box_Mechanics:
     def check_click(self, mouse_pos):
         if self.active and self.rectangle.collidepoint(mouse_pos):
             print("The Red box is clicked")
-            self.active = False # once clicked, set to inactive
+            self.active = False
             self.click_time = pygame.time.get_ticks()
             return True
         return False  
 
     def update(self):
         if not self.active and (pygame.time.get_ticks() - self.click_time) > self.reset_time:
-            self.active = True # Make sure to reactivate the box
+            self.active = True
 
 class AnimationMechanics:
     def __init__(self, red_box, width, height, screen_width, screen_height):
@@ -46,8 +46,7 @@ class AnimationMechanics:
         self.red_box.rectangle.topleft = (update_x, update_y)
 
     def fly(self):
-        offset = 25 # the range within the red box
-
+        offset = 25
         if self.red_box.active:
             current_time = pygame.time.get_ticks()
             if current_time - self.fly_timer > self.fly_interval:
@@ -55,11 +54,10 @@ class AnimationMechanics:
                 fly_within_y = random.randint(-offset, offset)
                 self.red_box.rectangle.x += fly_within_x
                 self.red_box.rectangle.y += fly_within_y
-                self.fly_timer = current_time #reset the timer after the operaion completes. 
+                self.fly_timer = current_time
                 self.red_box.rectangle.x = max(60, min(self.red_box.rectangle.x, self.red_box.screen_width - self.red_box.rectangle.width - 50))
                 self.red_box.rectangle.y = max(80, min(self.red_box.rectangle.y, self.red_box.screen_height - self.red_box.rectangle.height - 50))
                 self.angle = (self.angle + 10) % 360
-
 
 
 def main():
@@ -82,10 +80,17 @@ def main():
     score_text = score_font.render(f"Score: {score_count}", True, ('White'))
     score_rectangle = score_text.get_rect(center=(750, 95))
 
+    # Level Indicator
+    level_count = 0
+    level_font = pygame.font.Font(None, 36)
+    level_text = level_font.render(f"Level: {level_count}", True, ("white"))
+    level_rectangle = level_text.get_rect(topleft = (710, 125))
+
+
     # border line
     border_color = 'White'
     border_thickness = 4
-    border_rectangle = pygame.Rect(50, 70, 800, 600) # should posit 40 by 70px and the rect by 800 by 600px
+    border_rectangle = pygame.Rect(50, 70, 800, 600)
 
     # red box
     red_box_color = 'Black'
@@ -99,7 +104,7 @@ def main():
 
     # Pull Image
     image_path = os.path.join('..', 'docs', 'Bug.png')
-    image = pygame.image.load(image_path) #Should load an image
+    image = pygame.image.load(image_path)
     image = pygame.transform.scale(image, red_box_size)
 
     # Main loop
@@ -109,12 +114,16 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1: # Left mouse button
+                if event.button == 1:
                     mouse_pos = event.pos
                     if red_box.check_click(mouse_pos):
                         score_count += 1
                         score_text = score_font.render(f"Score: {score_count}", True, ('White'))
                         animation_mechanics.teleport()
+                        if score_count % 5 == 0:
+                            level_count += 1
+                            level_text = level_font.render(f"Level: {level_count}", True, ('White'))
+                            animation_mechanics.fly_interval -= 40
 
         red_box.update()
         animation_mechanics.fly()
@@ -132,9 +141,9 @@ def main():
             rectangular = rotated_image.get_rect(center = red_box.rectangle.center)
             screen.blit(rotated_image, rectangular)
 
-        #screen.blit(image, red_box.rectangle.topleft)
 
         screen.blit(score_text, score_rectangle)
+        screen.blit(level_text, level_rectangle)
 
         pygame.display.flip()
 
